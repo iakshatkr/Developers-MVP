@@ -1,0 +1,47 @@
+[
+  {
+    "id": "DEV001",
+    "name": "Alice Johnson",
+    "email": "alice.johnson@company.com",
+    "role": "Senior Frontend Developer",
+    "team": "Frontend",
+    "startDate": "2020-01-15",
+    "status": "active"
+  },
+  {
+    "id": "DEV002",
+    "name": "Bob Smith",
+    "email": "bob.smith@company.com",
+    "role": "Backend Developer",
+    "team": "Backend",
+    "startDate": "2021-06-01",
+    "status": "active"
+  },
+  {
+    "id": "DEV003",
+    "name": "Carol Martinez",
+    "email": "carol.martinez@company.com",
+    "role": "Full Stack Developer",
+    "team": "Full Stack",
+    "startDate": "2019-03-10",
+    "status": "active"
+  },
+  {
+    "id": "DEV004",
+    "name": "David Chen",
+    "email": "david.chen@company.com",
+    "role": "DevOps Engineer",
+    "team": "Infrastructure",
+    "startDate": "2022-02-20",
+    "status": "active"
+  },
+  {
+    "id": "DEV005",
+    "name": "Emma Wilson",
+    "email": "emma.wilson@company.com",
+    "role": "QA Engineer",
+    "team": "Quality Assurance",
+    "startDate": "2021-09-05",
+    "status": "active"
+  }
+]
