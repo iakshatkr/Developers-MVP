@@ -1,4 +1,4 @@
-# Developer Productivity MVP - Backend
+﻿Developer Productivity MVP - Backend
 
 A clean, beginner-friendly Node.js and Express backend for tracking developer productivity metrics.
 
@@ -23,7 +23,7 @@ This is the foundation of a Developer Productivity MVP that provides APIs to:
 
 ## 📁 Project Structure
 
-```
+```text
 developers-mvp/
 ├── src/
 │   ├── controllers/          # HTTP request handlers
@@ -53,25 +53,25 @@ developers-mvp/
 **Three-Layer Architecture:**
 
 1. **Routes Layer** (`src/routes/`)
-   - Maps HTTP requests to controllers
-   - Defines API endpoints
-   - Handles route ordering
+- Maps HTTP requests to controllers
+- Defines API endpoints
+- Handles route ordering
 
 2. **Controllers Layer** (`src/controllers/`)
-   - Handles HTTP requests and responses
-   - Validates input parameters
-   - Formats and returns data
-   - Delegates business logic to services
+- Handles HTTP requests and responses
+- Validates input parameters
+- Formats and returns data
+- Delegates business logic to services
 
 3. **Services Layer** (`src/services/`)
-   - Contains core business logic
-   - Interacts with data sources
-   - Performs calculations and filtering
-   - Returns processed data to controllers
+- Contains core business logic
+- Interacts with data sources
+- Performs calculations and filtering
+- Returns processed data to controllers
 
 4. **Data Layer** (`src/data/`)
-   - Mock JSON files (simulating database)
-   - Can be easily replaced with real database
+- Mock JSON files (simulating database)
+- Can be easily replaced with real database
 
 ## 🚀 Getting Started
 
@@ -103,7 +103,7 @@ The server will start on `http://localhost:3000`
 ### Developer Endpoints
 
 #### Get All Developers
-```
+```http
 GET /developers
 ```
 Returns all developers in the system.
@@ -129,7 +129,7 @@ Returns all developers in the system.
 ```
 
 #### Get Specific Developer
-```
+```http
 GET /developers/:id
 ```
 Returns a specific developer by ID.
@@ -154,7 +154,7 @@ Returns a specific developer by ID.
 ```
 
 #### Get Developers by Team
-```
+```http
 GET /developers/team/:team
 ```
 Returns all developers in a specific team.
@@ -162,7 +162,7 @@ Returns all developers in a specific team.
 **Example:** `GET /developers/team/Frontend`
 
 #### Get Active Developer Count
-```
+```http
 GET /developers/stats/active
 ```
 Returns the number of active developers.
@@ -170,7 +170,7 @@ Returns the number of active developers.
 ### Metrics Endpoints
 
 #### Get All Metrics for Developer
-```
+```http
 GET /metrics/:developerId
 ```
 Returns all historical metrics for a specific developer.
@@ -178,7 +178,7 @@ Returns all historical metrics for a specific developer.
 **Example:** `GET /metrics/DEV001`
 
 #### Get Latest Metrics
-```
+```http
 GET /metrics/:developerId/latest
 ```
 Returns the most recent metrics for a developer.
@@ -206,7 +206,7 @@ Returns the most recent metrics for a developer.
 ```
 
 #### Get Metrics for Specific Month
-```
+```http
 GET /metrics/:developerId/:month
 ```
 Returns metrics for a developer in a specific month (YYYY-MM format).
@@ -214,13 +214,13 @@ Returns metrics for a developer in a specific month (YYYY-MM format).
 **Example:** `GET /metrics/DEV001/2025-01`
 
 #### Get Average Productivity Score
-```
+```http
 GET /metrics/:developerId/average-score
 ```
 Returns the average productivity score across all time periods.
 
 #### Get Aggregated Metrics
-```
+```http
 GET /metrics/aggregated/all
 ```
 Returns aggregate statistics for all developers.
@@ -239,14 +239,14 @@ Returns aggregate statistics for all developers.
 ```
 
 #### Health Check
-```
+```http
 GET /health
 ```
 Simple endpoint to verify API is running.
 
 ## 🔄 How Data Flows Through the Application
 
-```
+```text
 HTTP Request
     ↓
 Route (src/routes/)
@@ -337,7 +337,8 @@ This project is structured for learning:
 
 ### Environment Variables (Future)
 Create a `.env` file:
-```
+
+```env
 PORT=3000
 NODE_ENV=development
 ```
