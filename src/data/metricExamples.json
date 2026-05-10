@@ -1,0 +1,4 @@
+﻿[
+  {"developer_id":"DEV-001","month":"2026-03","developer_name":"Ava Chen","manager_id":"MGR-01","team_name":"Payments API","issues_done":2,"merged_prs":2,"prod_deployments":2,"escaped_bugs":0,"avg_cycle_time_days":4.0,"avg_lead_time_days":2.4,"bug_rate":0.0,"pattern_hint":"Healthy flow","dev_month_key":"DEV-001|2026-03"},
+  {"developer_id":"DEV-001","month":"2026-04","developer_name":"Ava Chen","manager_id":"MGR-01","team_name":"Payments API","issues_done":2,"merged_prs":2,"prod_deployments":2,"escaped_bugs":0,"avg_cycle_time_days":3.9,"avg_lead_time_days":3.4,"bug_rate":0.0,"pattern_hint":"Healthy flow","dev_month_key":"DEV-001|2026-04"}
+]
