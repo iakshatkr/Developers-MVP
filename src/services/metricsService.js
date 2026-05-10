@@ -1,103 +1,108 @@
-/**
- * metricsService.js
- * 
- * Business logic layer for metrics-related operations.
- * Handles metric retrieval, aggregation, and calculations.
- * 
- * Purpose: Separate metrics logic from controllers to maintain clean separation of concerns
- */
+﻿import { loadJsonData } from '../utils/dataLoader.js';
 
-import { loadJsonData } from '../utils/dataLoader.js';
+const round1 = (n) => Math.round(n * 10) / 10;
 
-/**
- * Get all metrics for a specific developer
- * @param {string} developerId - The ID of the developer
- * @returns {Array} List of metrics for the developer
- */
 function getMetricsForDeveloper(developerId) {
-  const metrics = loadJsonData('metrics.json');
-  return metrics.filter(metric => metric.developerId === developerId);
+  const jiraIssues = loadJsonData('jiraIssues.json').filter((r) => r.developer_id === developerId);
+  const pullRequests = loadJsonData('pullRequests.json').filter((r) => r.developer_id === developerId && r.status === 'merged');
+  const deployments = loadJsonData('deployments.json').filter((r) => r.developer_id === developerId && r.status === 'success');
+  const bugReports = loadJsonData('bugReports.json').filter((r) => r.developer_id === developerId && r.escaped_to_prod === 'Yes');
+
+  const months = new Set([
+    ...jiraIssues.map((r) => r.month_done),
+    ...pullRequests.map((r) => r.month_merged),
+    ...deployments.map((r) => r.month_deployed),
+    ...bugReports.map((r) => r.month_found)
+  ]);
+
+  return [...months].sort().map((month) => buildMetricRow(developerId, month));
 }
 
-/**
- * Get the latest metrics for a developer (most recent month)
- * @param {string} developerId - The ID of the developer
- * @returns {Object|null} Latest metrics object or null if not found
- */
-function getLatestMetricsForDeveloper(developerId) {
-  const metrics = getMetricsForDeveloper(developerId);
-  
-  if (metrics.length === 0) {
-    return null;
-  }
-  
-  // Sort by month in descending order and get the first one
-  return metrics.sort((a, b) => b.month.localeCompare(a.month))[0];
-}
+function buildMetricRow(developerId, month) {
+  const developers = loadJsonData('developers.json');
+  const jiraIssues = loadJsonData('jiraIssues.json');
+  const pullRequests = loadJsonData('pullRequests.json');
+  const deployments = loadJsonData('deployments.json');
+  const bugReports = loadJsonData('bugReports.json');
 
-/**
- * Get metrics for a specific developer and month
- * @param {string} developerId - The ID of the developer
- * @param {string} month - The month in YYYY-MM format
- * @returns {Object|null} Metrics object or null if not found
- */
-function getMetricsForMonth(developerId, month) {
-  const metrics = loadJsonData('metrics.json');
-  return metrics.find(
-    metric => metric.developerId === developerId && metric.month === month
-  ) || null;
-}
+  const dev = developers.find((d) => d.developer_id === developerId);
+  const issues = jiraIssues.filter((r) => r.developer_id === developerId && r.month_done === month && r.status === 'Done');
+  const prs = pullRequests.filter((r) => r.developer_id === developerId && r.month_merged === month && r.status === 'merged');
+  const deps = deployments.filter((r) => r.developer_id === developerId && r.month_deployed === month && r.status === 'success');
+  const bugs = bugReports.filter((r) => r.developer_id === developerId && r.month_found === month && r.escaped_to_prod === 'Yes');
 
-/**
- * Get average productivity score for a developer across all periods
- * @param {string} developerId - The ID of the developer
- * @returns {number} Average productivity score
- */
-function getAverageSocreForDeveloper(developerId) {
-  const metrics = getMetricsForDeveloper(developerId);
-  
-  if (metrics.length === 0) {
-    return 0;
-  }
-  
-  const totalScore = metrics.reduce((sum, metric) => sum + metric.productivityScore, 0);
-  return Math.round(totalScore / metrics.length);
-}
+  const cycleTime = issues.length ? round1(issues.reduce((s, r) => s + Number(r.cycle_time_days), 0) / issues.length) : 0;
+  const leadTime = deps.length ? round1(deps.reduce((s, r) => s + Number(r.lead_time_days), 0) / deps.length) : 0;
+  const prThroughput = prs.length;
+  const deploymentFrequency = deps.length;
+  const bugRate = issues.length ? round1(bugs.length / issues.length) : 0;
 
-/**
- * Get aggregated metrics statistics for all developers
- * @returns {Object} Statistics including average scores and totals
- */
-function getAggregatedMetrics() {
-  const metrics = loadJsonData('metrics.json');
-  
-  if (metrics.length === 0) {
-    return {
-      totalMetrics: 0,
-      averageProductivityScore: 0,
-      averageTAsksCompleted: 0
-    };
-  }
-  
-  const averageScore = Math.round(
-    metrics.reduce((sum, m) => sum + m.productivityScore, 0) / metrics.length
-  );
-  
-  const averageTasks = Math.round(
-    metrics.reduce((sum, m) => sum + m.tasksCompleted, 0) / metrics.length
-  );
-  
+  const interpretation = getInterpretation({ cycleTime, leadTime, prThroughput, deploymentFrequency, bugRate });
+  const recommendations = getRecommendations({ cycleTime, leadTime, prThroughput, deploymentFrequency, bugRate });
+
   return {
-    totalMetrics: metrics.length,
-    averageProductivityScore: averageScore,
-    averageTAsksCompleted: averageTasks
+    developer_id: developerId,
+    month,
+    developer_name: dev?.developer_name,
+    manager_id: dev?.manager_id,
+    team_name: dev?.team_name,
+    issues_done: issues.length,
+    merged_prs: prThroughput,
+    prod_deployments: deploymentFrequency,
+    escaped_bugs: bugs.length,
+    avg_cycle_time_days: cycleTime,
+    avg_lead_time_days: leadTime,
+    bug_rate: bugRate,
+    interpretation,
+    recommendations,
+    dev_month_key: `${developerId}|${month}`
   };
 }
 
-export {
-  getMetricsForDeveloper,
-  getLatestMetricsForDeveloper,
-  getMetricsForMonth,
-  getAverageSocreForDeveloper,
-  getAggregatedMetrics
-};
+function getLatestMetricsForDeveloper(developerId) {
+  const rows = getMetricsForDeveloper(developerId);
+  return rows.length ? rows[rows.length - 1] : null;
+}
+
+function getMetricsForMonth(developerId, month) {
+  return buildMetricRow(developerId, month);
+}
+
+function getAverageSocreForDeveloper(developerId) {
+  const rows = getMetricsForDeveloper(developerId);
+  if (!rows.length) return 0;
+  const avg = rows.reduce((s, r) => s + (100 - r.avg_cycle_time_days * 5 - r.bug_rate * 50), 0) / rows.length;
+  return Math.max(0, Math.round(avg));
+}
+
+function getAggregatedMetrics() {
+  const developers = loadJsonData('developers.json');
+  const metricRows = developers.flatMap((d) => getMetricsForDeveloper(d.developer_id));
+
+  return {
+    totalMetrics: metricRows.length,
+    averageCycleTime: metricRows.length ? round1(metricRows.reduce((s, r) => s + r.avg_cycle_time_days, 0) / metricRows.length) : 0,
+    averageLeadTimeForChanges: metricRows.length ? round1(metricRows.reduce((s, r) => s + r.avg_lead_time_days, 0) / metricRows.length) : 0,
+    totalMergedPrs: metricRows.reduce((s, r) => s + r.merged_prs, 0),
+    totalSuccessfulDeployments: metricRows.reduce((s, r) => s + r.prod_deployments, 0),
+    averageBugRate: metricRows.length ? round1(metricRows.reduce((s, r) => s + r.bug_rate, 0) / metricRows.length) : 0
+  };
+}
+
+function getInterpretation({ cycleTime, leadTime, bugRate }) {
+  if (bugRate >= 0.5) return 'Quality watch';
+  if (cycleTime > 5 || leadTime > 4) return 'Slow review cycle';
+  if (leadTime <= 2.5) return 'High deployment efficiency';
+  return 'Healthy flow';
+}
+
+function getRecommendations({ cycleTime, leadTime, bugRate }) {
+  const items = [];
+  if (cycleTime > 5) items.push('Reduce PR size');
+  if (bugRate >= 0.5) items.push('Improve test coverage');
+  if (leadTime > 4) items.push('Reduce review wait time');
+  if (leadTime > 3) items.push('Increase deployment cadence');
+  return items.length ? items : ['Maintain current execution rhythm'];
+}
+
+export { getMetricsForDeveloper, getLatestMetricsForDeveloper, getMetricsForMonth, getAverageSocreForDeveloper, getAggregatedMetrics };
