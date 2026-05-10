@@ -1,47 +1,10 @@
-[
-  {
-    "id": "DEV001",
-    "name": "Alice Johnson",
-    "email": "alice.johnson@company.com",
-    "role": "Senior Frontend Developer",
-    "team": "Frontend",
-    "startDate": "2020-01-15",
-    "status": "active"
-  },
-  {
-    "id": "DEV002",
-    "name": "Bob Smith",
-    "email": "bob.smith@company.com",
-    "role": "Backend Developer",
-    "team": "Backend",
-    "startDate": "2021-06-01",
-    "status": "active"
-  },
-  {
-    "id": "DEV003",
-    "name": "Carol Martinez",
-    "email": "carol.martinez@company.com",
-    "role": "Full Stack Developer",
-    "team": "Full Stack",
-    "startDate": "2019-03-10",
-    "status": "active"
-  },
-  {
-    "id": "DEV004",
-    "name": "David Chen",
-    "email": "david.chen@company.com",
-    "role": "DevOps Engineer",
-    "team": "Infrastructure",
-    "startDate": "2022-02-20",
-    "status": "active"
-  },
-  {
-    "id": "DEV005",
-    "name": "Emma Wilson",
-    "email": "emma.wilson@company.com",
-    "role": "QA Engineer",
-    "team": "Quality Assurance",
-    "startDate": "2021-09-05",
-    "status": "active"
-  }
+﻿[
+  {"developer_id":"DEV-001","developer_name":"Ava Chen","manager_id":"MGR-01","manager_name":"Rina Kapoor","team_name":"Payments API","service_type":"backend","level":"SDE2"},
+  {"developer_id":"DEV-002","developer_name":"Noah Patel","manager_id":"MGR-01","manager_name":"Rina Kapoor","team_name":"Payments API","service_type":"backend","level":"SDE1"},
+  {"developer_id":"DEV-006","developer_name":"Ishan Mehta","manager_id":"MGR-01","manager_name":"Rina Kapoor","team_name":"Payments API","service_type":"backend","level":"SDE3"},
+  {"developer_id":"DEV-003","developer_name":"Mia Lopez","manager_id":"MGR-02","manager_name":"Samir Gupta","team_name":"Checkout Web","service_type":"frontend","level":"SDE1"},
+  {"developer_id":"DEV-004","developer_name":"Lucas Reed","manager_id":"MGR-02","manager_name":"Samir Gupta","team_name":"Checkout Web","service_type":"frontend","level":"SDE2"},
+  {"developer_id":"DEV-008","developer_name":"Zara Khan","manager_id":"MGR-02","manager_name":"Samir Gupta","team_name":"Checkout Web","service_type":"frontend","level":"SDE1"},
+  {"developer_id":"DEV-005","developer_name":"Emma Roy","manager_id":"MGR-03","manager_name":"Priya Nair","team_name":"Mobile Growth","service_type":"mobile","level":"SDE1"},
+  {"developer_id":"DEV-007","developer_name":"Owen Brooks","manager_id":"MGR-03","manager_name":"Priya Nair","team_name":"Mobile Growth","service_type":"mobile","level":"SDE2"}
 ]
